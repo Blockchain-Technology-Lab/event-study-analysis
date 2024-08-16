@@ -1,4 +1,3 @@
-'''
 Hi! 
 
 Here is the code to run the event study analysis. The functions for the different models exist in the additional files. 
@@ -10,4 +9,4 @@ The test_significance function relies on a permutation test. We are not sure tha
 Ideally, we would follow this algorithm: https://link.springer.com/article/10.1007/s00181-023-02530-7 .... or something similar. 
 In short, we need a way to test the significance of the abnormal returns differing from zero which does not rely on the assumption of normality (that a t-test does).
 A permutation test is a way to do this. It is important to find single-firm permutation tests, as many tests assume testing an event across multiple firms.
-'''
+
