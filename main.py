@@ -12,12 +12,12 @@ import matplotlib.pyplot as plt
 # OPTIONS FOR METRICS "gini", "mpr", "tau", "theil", "nump", "entropy", "hhi", "nc"]
 
 
-def load_dataframe(coin):
+def load_dataframe(ledger):
     '''
-    :param coin: the name of the coin/.csv file to be imported (.csv file should have the date in rows and the metrics in columns)
+    :param ledger: the name of the ledger/.csv file to be imported (.csv file should have the date in rows and the metrics in columns)
     :return: cleaned up pandas dataframe with the date as the index and metrics in columns
     '''
-    df = pd.read_csv(f'input/{coin}.csv', header=0)
+    df = pd.read_csv(f'input/{ledger}.csv', header=0)
     df = df.rename(columns={'Unnamed: 0': 'date'})
     df['date'] = pd.to_datetime(df['date'])
     return df
@@ -58,8 +58,8 @@ def pick_best_model(df, event_window, estimated_data, meter):
                 best_name = name
     return model_aic, window, esp_to_use, best_name
 
-def run_test(coin, meter, event_window):
-    df = load_dataframe(coin) #load dataframe
+def run_test(ledger, meter, event_window):
+    df = load_dataframe(ledger) #load dataframe
     estimated_data = df[df["date"].between(event_window[0], event_window[1])] #set the estimated data to be the event window specified
     model_aic, window, esp_to_use, best_name = pick_best_model(df, event_window, estimated_data, meter)
     predictions = pd.DataFrame(esp_to_use[meter].values) #reformat the predictions
