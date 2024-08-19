@@ -1,0 +1,4 @@
+matplotlib~=3.4.3
+netneurotools~=0.2.4
+numpy~=1.21.4
+pandas~=1.3.5
