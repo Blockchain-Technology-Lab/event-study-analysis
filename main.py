@@ -22,6 +22,7 @@ def load_dataframe(ledger):
     df['date'] = pd.to_datetime(df['date'])
     return df
 
+
 def set_observation_window(df, event_window, days_prior):
     '''
     This function simply helps to return a dataframe of the observation window we specify
@@ -31,7 +32,7 @@ def set_observation_window(df, event_window, days_prior):
     :return: cleaned up pandas dataframe of data from only the observation window of interest
     '''
     window = df[df["date"].between(datetime.strptime(event_window[0], '%Y-%m-%d') - timedelta(days=days_prior),
-                          event_window[0])]
+                                   event_window[0])]
     return window
 
 
@@ -58,30 +59,33 @@ def pick_best_model(df, event_window, estimated_data, meter):
                 best_name = name
     return model_aic, window, esp_to_use, best_name
 
+
 def run_test(ledger, meter, event_window):
-    df = load_dataframe(ledger) #load dataframe
-    estimated_data = df[df["date"].between(event_window[0], event_window[1])] #set the estimated data to be the event window specified
+    df = load_dataframe(ledger)  # load dataframe
+    estimated_data = df[
+        df["date"].between(event_window[0], event_window[1])]  # set the estimated data to be the event window specified
     model_aic, window, esp_to_use, best_name = pick_best_model(df, event_window, estimated_data, meter)
-    predictions = pd.DataFrame(esp_to_use[meter].values) #reformat the predictions
+    predictions = pd.DataFrame(esp_to_use[meter].values)  # reformat the predictions
     predictions = predictions[0].tolist()
-    observed = estimated_data[meter].to_list() #reformat the observed data
+    observed = estimated_data[meter].to_list()  # reformat the observed data
     difference = np.subtract(observed, predictions)
-    abreturns = (np.divide(difference, predictions))*100
-    dates = pd.date_range(datetime.strptime(event_window[0], '%Y-%m-%d'),datetime.strptime(event_window[1], '%Y-%m-%d'),freq='d')
+    abreturns = (np.divide(difference, predictions)) * 100
+    dates = pd.date_range(datetime.strptime(event_window[0], '%Y-%m-%d'),
+                          datetime.strptime(event_window[1], '%Y-%m-%d'), freq='d')
     plt.plot(dates, abreturns)
     plt.title(f'{meter}')
     plt.ylabel('% Change')
     plt.show()
     plt.close()
 
-        #if abreturns>0:
-            #effect = "positive"
-        #if abreturns<0:
-            #effect = "negative"
-        #if #abreturns == 0:
-            #effect = "no effect"
-        #if test_significance(abreturns) == True:
-            #print(f'{meter}: {best_name} model, {str(window)} day window reveals a significant {effect} event')
+    # if abreturns > 0:
+    #     effect = "positive"
+    # if abreturns < 0:
+    #     effect = "negative"
+    # if abreturns == 0:
+    #     effect = "no effect"
+    # if test_significance(abreturns) is True:
+    #     print(f'{meter}: {best_name} model, {str(window)} day window reveals a significant {effect} event')
 
 
 def test_significance(abreturns):
@@ -93,15 +97,8 @@ def test_significance(abreturns):
     p = nnstats.permtest_1samp(np.array(abreturns), 0.0)[-1]
     if p > 0.05:
         return False
-    if p <0.05:
+    if p < 0.05:
         return True
 
 
-run_test("bitcoin", "gini", event_window = ['2022-12-04', '2022-12-09'])
-
-
-
-
-
-
-
+run_test("bitcoin", "gini", event_window=['2022-12-04', '2022-12-09'])

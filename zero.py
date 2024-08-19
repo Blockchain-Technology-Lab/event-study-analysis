@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-
 def zero_order(est_data, obs_data, metric):
     est_predictions = {}
     obs_predictions = {}
@@ -12,6 +11,5 @@ def zero_order(est_data, obs_data, metric):
     n = len(obs_data[metric])
     k = 0
     sse = sum([i ** 2 for i in resid])
-    AIC = n*np.log(sse)-n*np.log(n)+2*(k+1)
+    AIC = n * np.log(sse) - n * np.log(n) + 2 * (k + 1)
     return obs_predictions, est_predictions, AIC
-
